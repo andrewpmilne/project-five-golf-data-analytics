@@ -106,7 +106,7 @@ Yes. The data supports:
   *Validation:*  
   Train a classification model using all strokes gained metrics as features to predict whether a player finishes in the top ten. Examine feature importance or model coefficients to assess the contribution of each skill category.
 
-## Mapping Business Requirements to Data Analysis and ML Tasks
+## Rationale to map the business requirements to the Data Visualisations and ML tasks
 
 ### Business Requirement One: Data Visualisation, Correlation, and Clustering
 
