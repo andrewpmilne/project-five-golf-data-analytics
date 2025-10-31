@@ -102,9 +102,9 @@ Yes. The data supports:
   *Validation:*  
   In a comparison study between players regularly finishing 30th–11th and those regularly finishing in the top ten, examine feature importance or model coefficients to determine which skill category most strongly influences the prediction.
 
-  - **Hypothesis 3: In reality, although they may be some small statistical differences, all strokes gained categories (driving, approach play, around the green, and putting) will play an important role in achieving top-ten finishes.**  
-  *Validation:*  
-  Train a classification model using all strokes gained metrics as features to predict whether a player finishes in the top ten. Examine feature importance or model coefficients to assess the contribution of each skill category.
+- **Hypothesis 3: In reality, although they may be some small statistical differences, all strokes gained categories (driving, approach play, around the green, and putting) will play an important role in achieving top-ten finishes.**  
+*Validation:*  
+Train a classification model using all strokes gained metrics as features to predict whether a player finishes in the top ten. Examine feature importance or to assess the contribution of each skill category.
 
 ## Rationale to map the business requirements to the Data Visualisations and ML tasks
 
