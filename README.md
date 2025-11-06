@@ -11,11 +11,12 @@ A golf coaching company has approached us to conduct a study to help them analys
 - **Business Requirement One**
   - The client wishes us to conduct an analysis of current elite-level golf tournament data to determine which golfing skills (e.g., driving, approach play, chipping, and putting) are most likely to result in a player reaching the top ten of a tournament. 
   - They are specifically interested in learning which skill to focus on to help a player improve from a 30th–11th place finish to a top-ten finish.
-  - They wish to group elite level golfers based on their skills in order to further determine which style of play is most likely to result in success.
 
 - **Business Requirement Two**
-  - Once they have worked with a player and gained an understanding of their 'strokes gained' performance, they would like us to deliver a machine learning (ML) model capable of reliably predicting the chances of a player finishing in the top ten of a tournament based on their current level of performance.
-  - They could also be interested in an ML system that can predict the exact finishing position of a player based on their current level of performance.
+  - They wish to group elite level golfers based on their skills in order to further determine which style of golfer they could identify for improvement.
+
+- **Business Requirement Three**
+  - Once they have worked with a player and gained an understanding of their 'strokes gained' performance, they would like us to deliver a machine learning (ML) model capable of reliably predicting the finishing position of a player based on their current level of skill in each strokes gained area.
 
 ## Project Terms and Jargon
 
@@ -57,13 +58,13 @@ The client requires a **dashboard**, allowing coaches to explore player performa
 
 **What does the client consider a successful project outcome?**  
 - Identification of the most relevant skill areas that correlate with top-ten finishes.  
-- Ability to predict the likelihood of a player achieving a top-ten finish.  
-- Insights into player clusters and performance profiles to guide coaching strategies.  
+- Insights into player clusters and performance profiles to guide coaching strategies.
+- A reliable model to predict player performance
 
 **Can you break down the project into Epics and User Stories?**  
 - **Information gathering and data collection:** Obtain historical PGA Tour performance data (2015–2022).  
 - **Data visualisation, cleaning, and preparation:** Prepare strokes gained metrics, handle missing values, and visualise correlations.  
-- **Model training, optimisation, and validation:** Train classification models for top-ten prediction and clustering models for player profiles.  
+- **Model training, optimisation, and validation:** Train regression models for finishing prediction and clustering models for player profiles.  
 - **Dashboard planning, designing, and development:** Design interactive visualisations and prediction interfaces.  
 - **Dashboard deployment and release:** Launch the Streamlit app for client access and testing.  
 
@@ -72,19 +73,18 @@ No. The dataset consists of publicly available PGA Tour performance statistics. 
 
 **Does the data suggest a particular model?**  
 Yes. The data supports:  
-- A **binary classifier** for predicting top-ten finishes.  
+- A **regression classifier** for predicting tournament finishes.  
 - **Unsupervised clustering** to group players by performance profiles.  
 
 **What are the model's inputs and intended outputs?**  
 - **Inputs:** Strokes gained metrics (Driving, Approach Play, Around the Green, Putting) and tournament finishing positions.  
 - **Outputs:**  
-  - Binary flag for top-ten likelihood with associated probability.  
+  - Regression model to predict finishing position.  
   - Cluster assignment indicating the player’s performance group.  
 
 **What are the criteria for the performance goal of the predictions?**  
-- At least **80% recall** for top-ten players.  
-- At least **80% precision** for non-top-ten predictions.  
-- Clusters must show **clear separation** and meaningful differences in average strokes gained metrics.  
+- The model’s performance goal is an MAE of less than 5 finishing positions, meaning predictions are on average within five spots of the true result.  
+- Clusters must show clear separation and meaningful differences in average strokes gained metrics.  
 
 **How will the client benefit?**  
 - Coaches can focus training on the skill areas most predictive of top-ten performance.  
@@ -108,54 +108,57 @@ Train a classification model using all strokes gained metrics as features to pre
 
 ## Rationale to map the business requirements to the Data Visualisations and ML tasks
 
-### Business Requirement One: Data Visualisation, Correlation, and Clustering
+### Business Requirement One: Data Visualisation and Correlation 
 
 - We will inspect the tournament and player performance data.  
 - We will conduct a correlation study (e.g., Pearson and Spearman) to understand how different strokes gained metrics relate to top-ten finishes.  
 - We will compare players regularly finishing 11th–30th with those regularly finishing in the top ten, and use data visualisation to highlight differences in key skills.  
-- We will visualise key variables against finishing position or top-ten status to gain insights into which skills are most impactful.  
+- We will visualise key variables against finishing position or top-ten status to gain insights into which skills are most impactful. 
+
+### Business Requirement Two: Clustering
+
 - We will cluster players with similar performance profiles to identify patterns in skills and results, helping coaches understand typical player types and areas for improvement.
 
-### Business Requirement Two: Predictive Modelling
+### Business Requirement Three: Predictive Modelling
 
-- We want to predict whether a player will finish in the top ten or not. We will build a **binary classification model** using strokes gained metrics as features.  
-- We may also predict a player’s **exact finishing position**. Depending on performance, we can approach this as a regression problem or convert it to classification into finishing bands (e.g., top 10, 11–30, 31+).  
-- Model outputs will provide actionable insights for coaches about which players are likely to reach the top ten.
+- We aim to predict each player's tournament finishing position using their strokes gained statistics as input features.  
+- A regression model will be developed to estimate a continuous finishing position rather than a binary outcome.  
+- This approach enables more detailed insights by showing how close a player is likely to finish relative to others, instead of simply indicating whether they will place in the top ten.  
+- Model outputs will include predicted finishing positions and associated confidence intervals, providing coaches with actionable insights into player performance expectations and areas for improvement.
 
 
 ## ML Business Case
 
-### Predict Top-Ten Finishes
-**Classification Model**
+### Predict Tournament Finishes
+**Regression Model**
 
-We aim to develop a machine learning (ML) model that predicts whether a professional golfer will finish in the top ten of a tournament based on their performance statistics (strokes gained metrics).  
-The target variable is categorical with two classes:
-- **0:** Player finishes outside the top ten  
-- **1:** Player finishes in the top ten  
+We aim to develop a machine learning (ML) model that predicts a professional golfer’s tournament finishing position based on their performance statistics (strokes gained metrics).  
+The target variable is continuous, representing the player’s final finishing position in the tournament.
 
-This is a **supervised, two-class, single-label classification problem**.
+This is a supervised regression problem, where the model learns to estimate numerical outcomes rather than classifying players into predefined categories.
 
-Our ideal outcome is to provide reliable insights into which skill areas most strongly influence a player’s likelihood of achieving a top-ten finish. This will support coaches in prioritising the right technical areas for player development.
+Our ideal outcome is to provide reliable insights into which skill areas most strongly influence a player’s expected finishing position. This will support coaches in identifying performance strengths and weaknesses, helping them prioritise technical areas for player development.
 
 **Model success metrics:**
-- At least **80% recall** for predicting top-ten finishes on both training and test datasets (to ensure the model captures most true top-ten players).  
-- At least **80% precision** for predicting non-top-ten finishes (to avoid incorrectly classifying too many players as top-ten prospects).
+- Mean Absolute Error (MAE) of 5 positions or less on both training and test datasets (indicating predictions are, on average, within five finishing positions of the actual result).  
+- Root Mean Squared Error (RMSE) used as a secondary measure to assess the consistency of predictions and identify large outliers.  
 
 **The ML model is considered a failure if:**
-- After evaluation, more than **30% of actual top-ten players** are missed by the model (indicating low recall).  
-- **Precision for non-top-ten predictions** falls below 80% on the train and test sets (indicating excessive false positives).  
+- The MAE exceeds 5 positions on test data, indicating poor predictive accuracy.  
 
 **Model output:**
-The model output will include a **binary flag** indicating whether a player is likely to finish in the top ten, along with an **associated probability score**.
-These predictions will be made on demand, allowing coaches or analysts to input a player’s strokes gained statistics and instantly view their top-ten probability.
+The model output will include each player’s predicted finishing position.  
+Predictions will be generated on demand, allowing coaches or analysts to input a player’s strokes gained statistics and instantly view their expected finish.
 
 **Heuristics:**
-Currently, there is **no formal analytical approach** that we are aware of used to predict top-ten likelihood among professional golfers. This model aims to fill that gap by quantifying the skill combinations most predictive of elite performance.
+Currently, there is no formal analytical framework widely used to predict exact finishing positions in professional golf.  
+This model seeks to address that gap by quantifying the relationships between strokes gained metrics and finishing performance, offering a data-driven foundation for tournament outcome forecasting.
 
 **Training Data:**
-The training data will consist of historical player performance records from official tournaments on the PGA tour between 2015 and 2022. 
-- **Target:** Top-ten finish (yes/no)  
-- **Features:** Strokes gained metrics (Driving, Approach Play, Around the Green, Putting).
+The training data will consist of historical player performance records from official tournaments on the PGA Tour between 2015 and 2022.  
+- Target: Finishing position (continuous variable)  
+- Features: Strokes gained metrics (Driving, Approach Play, Around the Green, Putting)
+
 
 ### Cluster Player Performance Profiles
 **Clustering Model**
@@ -168,20 +171,20 @@ This will allow coaches to:
 - Target development strategies specific to each cluster to help players improve their overall ranking potential.
 
 **Model success metrics:**
-- The clusters must show **clear separation** between groups (e.g., measured by silhouette score).  
-- Each cluster should demonstrate **meaningful differences** in average performance statistics across strokes gained categories.  
+- The clusters must show clear separation between groups (e.g., measured by silhouette score).  
+- Each cluster should demonstrate meaningful differences in average performance statistics across strokes gained categories.  
 
 **Model output:**
-The model will output a **cluster assignment** for each player, indicating their performance group, along with **summary statistics** (average strokes gained per category) for each cluster.  
+The model will output a cluster assignment for each player, indicating their performance group, along with summary statistics (average strokes gained per category) for each cluster.  
 These clusters will be visualised using 2D or 3D plots to make interpretation straightforward for coaches.
 
 **Heuristics:**
-Currently, performance analysis is often conducted on an individual basis or using simple averages. Clustering will allow for **data-driven analysis**, helping coaches to identify which players are most similar to elite performers and which specific areas need targeted improvement.
+Currently, performance analysis is often conducted on an individual basis or using simple averages. Clustering will allow for data-driven analysis, helping coaches to identify which players are most similar to elite performers and which specific areas need targeted improvement.
 
 **Training Data:**
 The training data will use the same strokes gained and tournament performance dataset as the classification model.  
-- **Target:** None (unsupervised learning).  
-- **Features:** Strokes gained metrics (Driving, Approach Play, Around the Green, Putting).
+- Target: None (unsupervised learning).  
+- Features: Strokes gained metrics (Driving, Approach Play, Around the Green, Putting).
 
 ## Dashboard Design (Streamlit App User Interface)
 
@@ -196,7 +199,7 @@ The training data will use the same strokes gained and tournament performance da
   Summarise the historical tournament data, the number of players, number of tournaments, and which features (strokes gained metrics, finishing positions) are available.  
 
 - **State Business Requirements**  
-  Present Business Requirement One (exploratory analysis, correlation study and clustering) and Business Requirement Two (ML predictive modelling).  
+  Present Business Requirement One (exploratory analysis and data visualisation of top ten players and mid-range players), Business Requirement Two (clustering) and Business Requirement Three (ML predictive modelling).  
 
 ---
 
@@ -213,53 +216,62 @@ The training data will use the same strokes gained and tournament performance da
 - **Highlight differences in performance between 11–30th place finishers and top-ten finishers**  
   Visualise and compare the distributions of key strokes gained metrics for players finishing 11th–30th versus those in the top ten. Highlight which skill categories show the largest differences.  
 
+---
+
+### Page 3: Clustering
+- **State Business Requirement Two**
+  Cluster golfers with similar performance stats in order to understand which group of players to focus on.
+
 - **Clustering Insights**  
   Display clusters of players with similar performance profiles based on aggregated strokes gained metrics. Show average values for each cluster, highlight patterns, and provide actionable insights for coaching strategies.
 
 ---
 
-### Page 3: Player Top-Ten Predictor
-- **State Business Requirement Two**  
-  Predict whether a player is likely to finish in the top ten in upcoming tournaments.  
+### Page 4: Player Performance Predictor
+- **State Business Requirement Three**  
+  Predict a player's **expected finishing position** in upcoming tournaments.  
 
 - **Set of widget inputs for player profile**  
-  Include strokes gained metrics
+  Include **strokes gained metrics** (Driving, Approach Play, Around the Green, Putting).  
 
-- **"Run predictive analysis" button**  
+- **"Run Predictive Analysis" button**  
   Feeds the player profile to the ML pipelines:  
-  - Predicts **top-ten likelihood** with associated probability.  
-  - Determines the **cluster assignment** for the player and displays the cluster profile.  
+  - Predicts the player's expected finishing position.  
+  - Determines the cluster assignment for the player and displays the corresponding cluster profile.
+ 
 
 ---
 
-### Page 4: Project Hypotheses and Validation
-- Before analysis: describe each hypothesis.  
-- After analysis: report conclusions and validation results. Example hypotheses:  
+### Page 5: Project Hypotheses and Validation
+- After analysis: report conclusions and validation results.  
   1. **Driving strokes gained will have the strongest correlation with top-ten finishes**  
-     - Confirmed through correlation studies and classification model insights.  
+     - Confirmed through correlation studies and data visualisations.  
   2. **For players regularly finishing 11th–30th, improved putting is the key factor for top-ten improvement**  
-     - Validated through comparison studies and ML feature importance.  
+     - Validated through comparison studies.  
   3. **All strokes gained categories are important for top-ten success**  
      - Confirmed via classification model and cluster analysis showing multiple skills influencing outcomes.  
-
----
-
-### Page 5: ML - Predict Top-Ten Finishes
-- Considerations and conclusions after training the pipeline.  
-- Present ML pipeline steps (data preprocessing, feature selection, model training).  
-- Show **feature importance** (which strokes gained metrics matter most).  
-- Present **pipeline performance** metrics (accuracy, recall, precision).  
 
 ---
 
 ### Page 6: ML - Cluster Analysis
 - Considerations and conclusions after clustering players.  
 - Present clustering pipeline steps (aggregation, scaling, algorithm choice).  
-- Display **silhouette plot** to evaluate cluster separation.  
-- Show **distribution of clusters across top-ten vs 11–30 finishes**.  
-- Show **relative percentage of top-ten players in each cluster**.  
-- Display **most important features defining each cluster**.  
-- Present **cluster profile** with average strokes gained metrics and coaching insights.
+- Display silhouette plot to evaluate cluster separation. 
+- Show distribution of clusters across top-ten vs 11–30 finishes.  
+- Show relative percentage of top-ten players in each cluster.  
+- Display most important features defining each cluster.  
+- Present cluster profile with average strokes gained metrics and coaching insights.
+
+---
+
+### Page 7: ML - Predict Tournament Finishes
+- Considerations and conclusions after training the pipeline.  
+- Present ML pipeline steps (data preprocessing, feature selection, model training).  
+- Show feature importance (which strokes gained metrics most strongly influence finishing position).  
+- Present pipeline performance metrics (MAE, RMSE) to evaluate prediction accuracy and model reliability.
+
+---
+
 
 
 
