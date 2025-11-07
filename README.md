@@ -229,10 +229,10 @@ The training data will use the same strokes gained and tournament performance da
 
 ### Page 4: Player Performance Predictor
 - **State Business Requirement Three**  
-  Predict a player's **expected finishing position** in upcoming tournaments.  
+  Predict a player's expected finishing position in upcoming tournaments.  
 
 - **Set of widget inputs for player profile**  
-  Include **strokes gained metrics** (Driving, Approach Play, Around the Green, Putting).  
+  Include strokes gained metrics (Driving, Approach Play, Around the Green, Putting).  
 
 - **"Run Predictive Analysis" button**  
   Feeds the player profile to the ML pipelines:  
