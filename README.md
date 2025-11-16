@@ -126,6 +126,52 @@ Train a classification model using all strokes gained metrics as features to pre
 - This approach enables more detailed insights by showing how close a player is likely to finish relative to others, instead of simply indicating whether they will place in the top ten.  
 - Model outputs will include predicted finishing positions and associated confidence intervals, providing coaches with actionable insights into player performance expectations and areas for improvement.
 
+## Business Requirement One User Stories
+- As a golf performance analyst I want to understand how each strokes gained metric correlates with top-ten finishes so that I can identify which skill areas most strongly influence elite tournament success.
+### Acceptance Criteria
+- I can easily identify which strokes gained features are, in general, most likely to result in a top-ten finish.
+- I can see a plot to indicate the importance of each strokes gained feature.
+- I can navigate a dashboard easily in order to do this.
+### Tasks
+- Analyse the dataset to identify trends in strokes gained features.
+- Present the trends in a series of plots
+- Use streamlit to create an easy to navigate and understand dashboard.
+
+- As a golf coach I want to compare skill profiles of players finishing 11th–30th versus those finishing in the top ten so that I can identify which skill improvements are most likely to move a player into the top ten.
+### Acceptance Criteria
+- I can see a difference in the data of players who in general finish 11th-30th and players who in general finish in the top ten.
+- I can analyse visualisation of data to spot trends.
+
+## Business Requirement Two User Story
+
+- As a golf coach I want to see players grouped into meaningful performance clusters based on their strokes gained statistics so that I can identify different player types, understand their strengths and weaknesses, and target training strategies more effectively.
+### Acceptance Criteria
+- I can easily identify groups of players with similar strokes gained performance profiles.
+- I can see clear visualisations that show how clusters differ across the strokes gained metrics.
+- I can understand what defines each cluster, including their strengths and weaknesses.
+- I can navigate the dashboard easily to see the cluster plots and interpretations.
+### Tasks
+- Prepare and standardise the dataset for clustering.
+- Build an unsupervised clustering model to group players by performance profiles.
+- Analyse the resulting clusters to identify distinguishing strokes gained attributes.
+- Present the clusters in clear and intuitive visualisations (scatterplots, radar charts, summary tables).
+- Write simple explanations describing each cluster's characteristics and coaching implications.
+- Use Streamlit to build an easy-to-navigate dashboard page displaying the cluster visualisations and insights.
+
+## Business Requirement Three User Story
+As a golf coach I want to input a player’s strokes gained statistics and receive a predicted finishing position so that I can understand how well the player is likely to perform and identify which skills need improvement to achieve better results.
+### Acceptance Criteria
+- I can input a player’s strokes gained values into the dashboard.
+- I can receive a predicted finishing position based on the model.
+- I can clearly see which strokes gained metrics most influenced the prediction.
+- I can view an explanation of the model’s accuracy (e.g., MAE, RMSE).
+- I can navigate the dashboard easily to run predictions and view outputs.
+### Tasks
+- Prepare and clean the strokes gained dataset for regression modelling.
+- Train a regression model to predict finishing position using strokes gained metrics.
+- Evaluate and document model performance (MAE, RMSE).
+- Build Streamlit widgets for user input.
+- Integrate the predictive model into the Streamlit dashboard with a “Run Predictive Analysis” button.
 
 ## ML Business Case
 
