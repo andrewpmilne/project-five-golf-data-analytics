@@ -276,7 +276,5 @@ def page_player_performance_study_body():
         unsafe_allow_html=True
     )
 
-
-
 # Call the function to display the page
 page_player_performance_study_body()
