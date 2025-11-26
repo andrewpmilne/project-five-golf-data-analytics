@@ -9,4 +9,3 @@ node_modules/
 cloudinary_python.txt
 kaggle.json
 venv/
-outputs/pipelines/tournament_prediction_pipeline.pkl
