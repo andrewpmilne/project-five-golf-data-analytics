@@ -190,7 +190,7 @@ Our ideal outcome is to provide reliable insights into which skill areas most st
 - Root Mean Squared Error (RMSE) used as a secondary measure to assess the consistency of predictions and identify large outliers.  
 
 **The ML model is considered a failure if:**
-- The MAE exceeds 5 positions on test data, indicating poor predictive accuracy.  
+- The MAE exceeds 8 positions in a 70 player tournament on test data, indicating poor predictive accuracy.  
 
 **Model output:**
 The model output will include each player’s predicted finishing position.  
