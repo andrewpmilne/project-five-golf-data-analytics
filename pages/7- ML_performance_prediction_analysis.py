@@ -1,73 +1,93 @@
 import streamlit as st
 import pandas as pd
-import joblib
-import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+import joblib
+import json
+import os
+import numpy as np
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error, r2_score
 
-# Page title
-st.title("ML: Predict Tournament Finishes")
 
-# 1. Considerations & Conclusions
-st.header("Considerations & Conclusions")
-st.markdown("""
-- This Random Forest model predicts a player's finishing position based on strokes gained metrics:
-  - `sg_putt`, `sg_arg`, `sg_app`, `sg_ott`
-- Test data shows **MAE < 5 positions** when trained on finished players only (`adj_pos < 1`).
-- Feature importance confirms **Putting** and **Approach** are the most critical factors influencing performance.
-- The model is slightly underfitting for lower-ranked players but performs well for the client’s target range (top 30).
-""")
+def page_predict_tournament_body():
 
-# 2. Load pipeline and test data
-pipeline = joblib.load("outputs/pipelines/tournament_prediction_pipeline.pkl")
-test_data = pd.read_csv("outputs/data/final/test/test_data.csv")
-val_data  = pd.read_csv("outputs/data/final/validation/val_data.csv")
+    save_dir = "outputs/pipelines"
 
-# Filter out players who missed the cut
-test_filtered = test_data[test_data['adj_pos'] < 1].copy()
-val_filtered  = val_data[val_data['adj_pos'] < 1].copy()
+    pipe_path = os.path.join(
+        save_dir, "tournament_prediction_pipeline.pkl"
+    )
+    best_pipe = joblib.load(pipe_path)
 
-sg_features = ['sg_putt', 'sg_arg', 'sg_app', 'sg_ott']
+    meta_path = os.path.join(save_dir, "metadata.json")
+    with open(meta_path, "r") as f:
+        metadata = json.load(f)
 
-X_test_f = test_filtered[sg_features]
-y_test_f = test_filtered['adj_pos']
+    X_train = pd.read_csv(os.path.join(save_dir, "X_train.csv"))
+    y_train = pd.read_csv(os.path.join(save_dir, "y_train.csv"))
+    X_test = pd.read_csv(os.path.join(save_dir, "X_test.csv"))
+    y_test = pd.read_csv(os.path.join(save_dir, "y_test.csv"))
 
-# 3. Predict
-y_test_pred = pipeline.predict(X_test_f)
+    feat_img_path = os.path.join(save_dir, "feature_importance.png")
+    feat_img = plt.imread(feat_img_path)
 
-# Convert scaled positions back to tournament positions
-max_pos = test_filtered.groupby('tournament_id')['true_pos'].transform('max')
-y_test_pred_pos = y_test_pred * (max_pos - 1) + 1
-y_test_actual = test_filtered['true_pos']
+    st.write("### ML Pipeline: Predict Tournament Finish")
+    st.info(
+        "* Predicts player finishing position using strokes gained data.\n"
+        "* Final model: tuned XGBoost Regressor.\n"
+        "* Features: putting, approach, around-the-green, off-the-tee.\n"
+        "* Results include feature importance and performance metrics."
+    )
 
-# 4. Show Performance Metrics
-st.header("Model Performance Metrics")
-mae_positions = mean_absolute_error(y_test_actual, y_test_pred_pos)
-rmse_positions = np.sqrt(mean_squared_error(y_test_actual, y_test_pred_pos))
+    st.write("---")
+    st.write("### Tuned Hyperparameters")
 
-st.markdown(f"**Test MAE:** {mae_positions:.2f} positions")
-st.markdown(f"**Test RMSE:** {rmse_positions:.2f} positions")
+    tuned_params = {
+        "n_estimators": best_pipe.get_params()["n_estimators"],
+        "learning_rate": best_pipe.get_params()["learning_rate"],
+        "max_depth": best_pipe.get_params()["max_depth"],
+        "subsample": best_pipe.get_params()["subsample"],
+        "colsample_bytree": best_pipe.get_params()["colsample_bytree"]
+    }
 
-# 5. Feature Importance
-st.header("Feature Importance")
-model = pipeline.named_steps['model']
-importances = model.feature_importances_
+    st.json(tuned_params)
 
-fig, ax = plt.subplots()
-sns.barplot(x=importances, y=sg_features, palette="viridis", ax=ax)
-ax.set_xlabel("Importance")
-ax.set_title("Feature Importance for Finishing Position Prediction")
-st.pyplot(fig)
+    st.write("---")
+    st.write("### Features Used")
+    st.write(metadata["features"])
+    st.image(feat_img, caption="Feature Importance")
 
-# 6. Predicted vs Actual Plot
-st.header("Predicted vs Actual Positions (Test Set)")
-fig, ax = plt.subplots(figsize=(8,6))
-ax.scatter(y_test_actual, y_test_pred_pos, alpha=0.6, color='purple', edgecolor='k')
-ax.plot([y_test_actual.min(), y_test_actual.max()],
-        [y_test_actual.min(), y_test_actual.max()], 'r--', linewidth=2)
-ax.set_xlabel("Actual Position")
-ax.set_ylabel("Predicted Position")
-ax.set_title("Predicted vs Actual Tournament Position")
-ax.grid(True)
-st.pyplot(fig)
+    st.write("---")
+    st.write("## Model Performance")
+
+    def eval_plot(X, y, name):
+        preds = best_pipe.predict(X)
+        size = 70
+        y_true = y.values.flatten() * size
+        y_pred = preds * size
+
+        y_true = np.clip(np.round(y_true), 1, size)
+        y_pred = np.clip(np.round(y_pred), 1, size)
+
+        mae = mean_absolute_error(y_true, y_pred)
+        mse = mean_squared_error(y_true, y_pred)
+        rmse = np.sqrt(mse)
+        r2 = r2_score(y_true, y_pred)
+
+        st.write(f"### {name} Set Metrics")
+        st.write(f"* MAE: {mae:.2f}")
+        st.write(f"* RMSE: {rmse:.2f}")
+        st.write(f"* R²: {r2:.4f}")
+
+        fig, ax = plt.subplots(figsize=(7, 7))
+        ax.scatter(y_true, y_pred, alpha=0.6)
+        ax.plot([1, size], [1, size], 'r--')
+        ax.set_xlabel("Actual Position")
+        ax.set_ylabel("Predicted Position")
+        ax.set_title(f"Predicted vs Actual ({name})")
+        ax.grid(True)
+        st.pyplot(fig)
+
+    eval_plot(X_train, y_train, "Train")
+    eval_plot(X_test, y_test, "Test")
+
+page_predict_tournament_body()

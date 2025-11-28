@@ -303,9 +303,6 @@ The training data will use the same strokes gained and tournament performance da
 - Considerations and conclusions after clustering players.  
 - Present clustering pipeline steps (aggregation, scaling, algorithm choice).  
 - Display silhouette plot to evaluate cluster separation. 
-- Show distribution of clusters across top-ten vs 11–30 finishes.  
-- Show relative percentage of top-ten players in each cluster.  
-- Display most important features defining each cluster.  
 - Present cluster profile with average strokes gained metrics and coaching insights.
 
 ---
