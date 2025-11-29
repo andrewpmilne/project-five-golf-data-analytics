@@ -72,7 +72,7 @@ def page_cluster_analysis_body():
         "<li><strong>Cluster 6:</strong> Approach play should be the "
         "primary development focus.</li>"
         "<li><strong>Cluster 7:</strong> Balanced performers with no "
-        "major weaknesses.</li>"
+        "clear weaknesses.</li>"
         "</ul>"
         "</div>"
     )
