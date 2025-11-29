@@ -8,14 +8,10 @@ import numpy as np
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error, r2_score
 
-
 def page_predict_tournament_body():
-
     save_dir = "outputs/pipelines"
 
-    pipe_path = os.path.join(
-        save_dir, "tournament_prediction_pipeline.pkl"
-    )
+    pipe_path = os.path.join(save_dir, "tournament_prediction_pipeline.pkl")
     best_pipe = joblib.load(pipe_path)
 
     meta_path = os.path.join(save_dir, "metadata.json")
@@ -33,7 +29,7 @@ def page_predict_tournament_body():
     st.write("### ML Pipeline: Predict Tournament Finish")
     st.info(
         "* Predicts player finishing position using strokes gained data.\n"
-        "* Final model: tuned XGBoost Regressor.\n"
+        "* Final model: tuned Gradient Boosting Regressor.\n"
         "* Features: putting, approach, around-the-green, off-the-tee.\n"
         "* Results include feature importance and performance metrics."
     )
@@ -46,7 +42,7 @@ def page_predict_tournament_body():
         "learning_rate": best_pipe.get_params()["learning_rate"],
         "max_depth": best_pipe.get_params()["max_depth"],
         "subsample": best_pipe.get_params()["subsample"],
-        "colsample_bytree": best_pipe.get_params()["colsample_bytree"]
+        "max_features": best_pipe.get_params()["max_features"]
     }
 
     st.json(tuned_params)
@@ -64,7 +60,6 @@ def page_predict_tournament_body():
         size = 70
         y_true = y.values.flatten() * size
         y_pred = preds * size
-
         y_true = np.clip(np.round(y_true), 1, size)
         y_pred = np.clip(np.round(y_pred), 1, size)
 
