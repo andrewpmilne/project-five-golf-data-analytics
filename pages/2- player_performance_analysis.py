@@ -7,6 +7,7 @@ from src.data_management import load_golf_data, load_player_comparisons
 
 sns.set_style("whitegrid")
 
+
 # --- Main page ---
 def page_player_performance_study_body():
     st.title("⛳ Player Performance Study")

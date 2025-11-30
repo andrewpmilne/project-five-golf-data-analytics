@@ -8,6 +8,7 @@ import numpy as np
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error, r2_score
 
+
 def page_predict_tournament_body():
     save_dir = "outputs/pipelines"
 
@@ -86,5 +87,6 @@ def page_predict_tournament_body():
 
     eval_plot(X_train, y_train, "Train")
     eval_plot(X_test, y_test, "Test")
+
 
 page_predict_tournament_body()

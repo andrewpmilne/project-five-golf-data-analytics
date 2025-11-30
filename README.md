@@ -346,7 +346,8 @@ The training data will use the same strokes gained and tournament performance da
 - If the slug size is too large then add large files not required for the app to the .slugignore file.
 
 ## Testing
-[See testing.md file](./testing.md)
+Each Streamlit page for the app was put through the Code Institute Python Linter and came back with no errors ([click here to see the results](readme_resources/testing_results.pdf)).
+Significant manual testing was done of each page in the streamlit dashboard and of the results in the ML model.
 
 ## Main Data Analysis and Machine Learning Libraries
 
