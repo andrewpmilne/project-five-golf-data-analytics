@@ -334,7 +334,7 @@ The training data will use the same strokes gained and tournament performance da
 
 ## Deployment
 ### Heroku
-- The App live link is: https://golf-data-analytics-084c02e54b46.herokuapp.com/ML_performance_prediction_analysis
+- The App live link is: https://golf-data-analytics-084c02e54b46.herokuapp.com
 - Set the .python-version content to a supported version of Python.
 ### The project was deployed to Heroku using the following steps.
 - Log in to Heroku and create an App

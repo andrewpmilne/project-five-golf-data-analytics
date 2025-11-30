@@ -1,10 +1,12 @@
 import streamlit as st
 import pandas as pd
 
+
 @st.cache_data
 def load_golf_data(path="outputs/data/final/cleaned_golfdata.csv"):
     """Load the cleaned golf dataset."""
     return pd.read_csv(path)
+
 
 @st.cache_data
 def load_player_comparisons(
