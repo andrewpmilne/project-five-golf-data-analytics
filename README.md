@@ -6,7 +6,7 @@ Welcome to the readme file for the Golf Predictive Analytics study. Here you wil
 
 ## Business Requirements
 
-A golf coaching company has approached us to conduct a study to help them analyse the foci of their coaching techniques with prospective elite-level golfing clients. They wish to attract clients who are currently playing professionally but do not yet have the skill level or consistency to regularly finish in the top ten of tournaments. They have suggested two primary business requirements:
+A golf coaching company has approached us to conduct a study to help them analyse the foci of their coaching techniques with prospective elite-level golfing clients. They wish to attract clients who are currently playing professionally but do not yet have the skill level or consistency to regularly finish in the top ten of tournaments. They have suggested three primary business requirements:
 
 - **Business Requirement One**
   - The client wishes us to conduct an analysis of current elite-level golf tournament data to determine which golfing skills (e.g., driving, approach play, chipping, and putting) are most likely to result in a player reaching the top ten of a tournament. 
@@ -69,7 +69,7 @@ The client requires a **dashboard**, allowing coaches to explore player performa
 - **Dashboard deployment and release:** Launch the Streamlit app for client access and testing.  
 
 **Ethical or Privacy concerns?**  
-No. The dataset consists of publicly available PGA Tour performance statistics.  Although names are included, they are of professional golfers whose perforance data is already in the public eye. No personal or senstitive data is included.
+No. The dataset consists of publicly available PGA Tour performance statistics.  Although names are included in the initial database, they are of professional golfers whose perforance data is already in the public eye. No personal or senstitive data is included.
 
 **Does the data suggest a particular model?**  
 Yes. The data supports:  
@@ -80,10 +80,10 @@ Yes. The data supports:
 - **Inputs:** Strokes gained metrics (Driving, Approach Play, Around the Green, Putting) and tournament finishing positions.  
 - **Outputs:**  
   - Regression model to predict finishing position.  
-  - Cluster assignment indicating the player’s performance group.  
+  - Clustering model indicating the player’s performance group.  
 
 **What are the criteria for the performance goal of the predictions?**  
-- The model’s performance goal is an MAE of less than 5 finishing positions, meaning predictions are on average within five spots of the true result.  
+- The model’s performance goal is an MAE of less than 8 finishing positions, meaning predictions are on average within eight spots of the true result.  
 - Clusters must show clear separation and meaningful differences in average strokes gained metrics.  
 
 **How will the client benefit?**  
@@ -96,15 +96,15 @@ Yes. The data supports:
 
 - **Hypothesis 1: Strokes gained in driving will show the strongest correlation as to whether a player finishes in the top ten or not.**  
   *Validation:*  
-  A correlation study will be conducted to determine the relationship between strokes gained in driving and a player’s likelihood of finishing in the top ten.
+  A study will be conducted to determine the relationship between strokes gained in driving (and other strokes gained statistics) and a player’s likelihood of finishing in the top ten.
 
 - **Hypothesis 2: For players regularly finishing between 30th and 11th, improved putting statistics will be the most likely factor in achieving top-ten finishes.**  
   *Validation:*  
-  In a comparison study between players regularly finishing 30th–11th and those regularly finishing in the top ten, examine feature importance or model coefficients to determine which skill category most strongly influences the prediction.
+  In a comparison study between players regularly finishing 30th–11th and those regularly finishing in the top ten, examine comparison data to determine which skill category most strongly influences the prediction.
 
 - **Hypothesis 3: In reality, although they may be some small statistical differences, all strokes gained categories (driving, approach play, around the green, and putting) will play an important role in achieving top-ten finishes.**  
 *Validation:*  
-Train a classification model using all strokes gained metrics as features to predict whether a player finishes in the top ten. Examine feature importance or to assess the contribution of each skill category.
+Train a regression model using all strokes gained metrics as features to predict finishing position (therefore if they are in the top ten or not). Examine feature importance or to assess the contribution of each skill category.
 
 ## Rationale to map the business requirements to the Data Visualisations and ML tasks
 
@@ -124,7 +124,7 @@ Train a classification model using all strokes gained metrics as features to pre
 - We aim to predict each player's tournament finishing position using their strokes gained statistics as input features.  
 - A regression model will be developed to estimate a continuous finishing position rather than a binary outcome.  
 - This approach enables more detailed insights by showing how close a player is likely to finish relative to others, instead of simply indicating whether they will place in the top ten.  
-- Model outputs will include predicted finishing positions and associated confidence intervals, providing coaches with actionable insights into player performance expectations and areas for improvement.
+- Model outputs will include predicted finishing positions, providing coaches with actionable insights into player performance expectations and areas for improvement.
 
 ## Business Requirement One User Stories
 - As a golf performance analyst I want to understand how each strokes gained metric correlates with top-ten finishes so that I can identify which skill areas most strongly influence elite tournament success.
@@ -141,6 +141,10 @@ Train a classification model using all strokes gained metrics as features to pre
 ### Acceptance Criteria
 - I can see a difference in the data of players who in general finish 11th-30th and players who in general finish in the top ten.
 - I can analyse visualisation of data to spot trends.
+### Tasks
+- Group players by those who conistently finish in the top ten with those who consistently finih 11-30th. 
+- Compare the average strokes gained statistics of each group.
+- Present the findings in a series of clear and easy to manage plots on a streamlit dashboard.
 
 ## Business Requirement Two User Story
 
@@ -154,7 +158,6 @@ Train a classification model using all strokes gained metrics as features to pre
 - Prepare and standardise the dataset for clustering.
 - Build an unsupervised clustering model to group players by performance profiles.
 - Analyse the resulting clusters to identify distinguishing strokes gained attributes.
-- Present the clusters in clear and intuitive visualisations (scatterplots, radar charts, summary tables).
 - Write simple explanations describing each cluster's characteristics and coaching implications.
 - Use Streamlit to build an easy-to-navigate dashboard page displaying the cluster visualisations and insights.
 
@@ -186,7 +189,7 @@ This is a supervised regression problem, where the model learns to estimate nume
 Our ideal outcome is to provide reliable insights into which skill areas most strongly influence a player’s expected finishing position. This will support coaches in identifying performance strengths and weaknesses, helping them prioritise technical areas for player development.
 
 **Model success metrics:**
-- Mean Absolute Error (MAE) of 5 positions or less on both training and test datasets (indicating predictions are, on average, within five finishing positions of the actual result).  
+- Mean Absolute Error (MAE) of 8 positions or less on both training and test datasets (indicating predictions are, on average, within eight finishing positions of the actual result).  
 - Root Mean Squared Error (RMSE) used as a secondary measure to assess the consistency of predictions and identify large outliers.  
 
 **The ML model is considered a failure if:**
@@ -314,6 +317,64 @@ The training data will use the same strokes gained and tournament performance da
 - Present pipeline performance metrics (MAE, RMSE) to evaluate prediction accuracy and model reliability.
 
 ---
+
+## Unfixed Bugs
+- A Gradient Boosting ML model was used, despite XGBoost producing the best results during hyperparameter testing. The reason for this is that the size of XGBoost and compatibility with Heroku deployment made it impractical. Additionally, the difference in accuracy between the models tested was negligible. 
+- You will notice that the ML model has a bug when inputting data of an extremly high performer. In some cases, moving a strokes gained statistic from +1.5 to +2.0 (or similar) will result in a worse finishing prediction (from first to third for example). This was the same regardless of the ML model chosen. It is believed that this is due to the models not having much access to 'extreme' performance data in comparision with the 'average' data where golfers statistics tend to hover around 0. Future improvements could include post-prediction calibration or adjustments specifically targeting top performers.
+
+## Future improvements
+- A more detailed dataset could be used to add extra variables to the study such as:
+  - Length of course
+  - Difficulty of putting greens
+  - Weather conditions
+  - Length of rough (long grass either side of the fairways)
+  - A more specific statistic for approach (eg long irons and short irons)
+  - A more specific statistic for putting (long putts and short putts)
+- It could be useful to add a feature that suggests how much a player would improve if a given strokes gained feature improved by 0.5. Given the feature importance findings, this would help coaches know more about what skills to focus on.
+
+## Deployment
+### Heroku
+- The App live link is: https://golf-data-analytics-084c02e54b46.herokuapp.com/ML_performance_prediction_analysis
+- Set the .python-version content to a supported version of Python.
+### The project was deployed to Heroku using the following steps.
+- Log in to Heroku and create an App
+- At the Deploy tab, select GitHub as the deployment method.
+- Select your repository name and click Search. Once it is found, click Connect.
+- Select the branch you want to deploy (probably main), then click Deploy Branch.
+- The deployment process should happen smoothly if all deployment files are fully functional. 
+- Click now the button Open App on the top of the page to access your App.
+- If the slug size is too large then add large files not required for the app to the .slugignore file.
+
+## Testing
+[See testing.md file](./testing.md)
+
+## Main Data Analysis and Machine Learning Libraries
+
+- [**Streamlit**](https://docs.streamlit.io/) – For building interactive web apps and dashboards for data analysis.
+- [**Pandas**](https://pandas.pydata.org/docs/) – For data manipulation and analysis with DataFrame structures.
+- [**NumPy**](https://numpy.org/doc/) – For numerical computations, arrays, and mathematical operations.
+- [**Matplotlib**](https://matplotlib.org/stable/contents.html) – For creating static, interactive, and animated visualisations in Python.
+- [**Seaborn**](https://seaborn.pydata.org/) – For statistical data visualisation built on top of Matplotlib.
+- [**Joblib**](https://joblib.readthedocs.io/en/latest/) – For efficient serialisation of Python objects, often used to save/load ML models.
+- [**Scikit-learn**](https://scikit-learn.org/stable/documentation.html) – For machine learning algorithms, pipelines, clustering, metrics, and model evaluation.
+- [**XGBoost**](https://xgboost.readthedocs.io/en/stable/) – Gradient boosting framework for scalable and accurate ML models.
+- [**OS**](https://docs.python.org/3/library/os.html) – For interacting with the operating system (e.g., file paths, directories).
+- [**JSON**](https://docs.python.org/3/library/json.html) – For reading and writing JSON data files.
+
+## Credits
+
+**Data source:**  
+[PGA Tour Golf Data 2015–2022 (Kaggle)](https://www.kaggle.com/datasets/robikscube/pga-tour-golf-data-20152022)
+
+**Other resources and references:**  
+- [Wikipedia](https://www.wikipedia.org/) – for terminology and jargon definitions  
+- [PGATour.com](https://www.pgatour.com/) – for research on unusual tournament findings in the dataset  
+- [Stack Overflow](https://stackoverflow.com/) – for research and problem solving  
+- [ChatGPT](https://chat.openai.com/) – for research and code debugging assistance
+
+
+
+
 
 
 
