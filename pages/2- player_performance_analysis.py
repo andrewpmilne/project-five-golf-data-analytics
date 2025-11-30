@@ -2,29 +2,10 @@ import streamlit as st
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from src.data_management import load_golf_data, load_player_comparisons
+
 
 sns.set_style("whitegrid")
-
-
-# --- Load golf data ---
-@st.cache_data
-def load_golf_data():
-    df = pd.read_csv("outputs/data/final/cleaned_golfdata.csv")
-    return df
-
-
-# --- Load precomputed comparisons ---
-@st.cache_data
-def load_player_comparisons():
-    top_15 = pd.read_csv(
-        "outputs/data/interim/comparison/top_15_players_comparison.csv"
-    )
-    mid_15 = pd.read_csv(
-        "outputs/data/interim/comparison/mid_range_players_comparison.csv"
-    )
-
-    return top_15, mid_15
-
 
 # --- Main page ---
 def page_player_performance_study_body():
@@ -160,6 +141,8 @@ def page_player_performance_study_body():
         "performance, confirmed by heatmap and plots.</li>"
         "<li>Pairwise plots show all features generally contribute to "
         "top-ten finishes.</li>"
+        "<li>Heatmap also indicated that as no particular metric dominates, "
+        "a balanced skill set is important.</li>"
         "</ul>"
         "</div>",
         unsafe_allow_html=True
@@ -259,9 +242,12 @@ def page_player_performance_study_body():
         "<h3>📌 Analysis</h3>"
         "<ul>"
         "<li><b>Chipping & Driving Skills:</b> Mid-range players need "
-        "improvement in these areas to bridge gap to top-ten.</li>"
+        "improvement in these areas to bridge gap to top-ten. When "
+        "driving, boths sets have similar max 'ceilings' but top-ten "
+        "players are more consistently good.</li>"
         "<li><b>Around the Green Differences:</b> KDE plots show elite "
-        "players have consistent performance; mid-range players vary.</li>"
+        "players have consistent performance and a higher 'ceiling'; "
+        "mid-range players vary.</li>"
         "</ul>"
         "</div>",
         unsafe_allow_html=True

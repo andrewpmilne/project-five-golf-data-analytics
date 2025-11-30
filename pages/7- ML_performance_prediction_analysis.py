@@ -31,7 +31,9 @@ def page_predict_tournament_body():
         "* Predicts player finishing position using strokes gained data.\n"
         "* Final model: tuned Gradient Boosting Regressor.\n"
         "* Features: putting, approach, around-the-green, off-the-tee.\n"
-        "* Results include feature importance and performance metrics."
+        "* Results include feature importance plot. \n"
+        "* As the MAE is within 8 positions on average, "
+        " the model is deemed a success."
     )
 
     st.write("---")
