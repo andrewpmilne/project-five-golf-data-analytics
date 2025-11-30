@@ -4,6 +4,10 @@
 
 Welcome to the readme file for the Golf Predictive Analytics study. Here you will find all information related to the project, including the business case, testing details, and instructions for deployment.
 
+Github:(https://github.com/andrewpmilne/project-five-golf-data-analytics/tree/main)
+
+Live App:(https://golf-data-analytics-084c02e54b46.herokuapp.com)
+
 ## Business Requirements
 
 A golf coaching company has approached us to conduct a study to help them analyse the foci of their coaching techniques with prospective elite-level golfing clients. They wish to attract clients who are currently playing professionally but do not yet have the skill level or consistency to regularly finish in the top ten of tournaments. They have suggested three primary business requirements:
